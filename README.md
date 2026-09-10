@@ -9,10 +9,10 @@ KernelMask 是基于 [KernelSU](https://github.com/tiann/KernelSU) 的二改分�
 ### 来自 KernelSU 的核心功能
 
 - **基于内核的 root**：通过加载内核模块（LKM）实现 root，不修改系统分区
-- **OverlayFS 挂载**：对 /system 等分区进行透明挂载，模块系统与 Magisk 兼容
+- **模块挂载**：对 /system 等分区进行透明挂载，模块系统与 Magisk 兼容
 - **SELinux 策略补丁**：在内核层面修补 SELinux 策略，支持模块的 sepolicy.rule
 - **SU 兼容性**：提供与 Magisk 兼容的 su 接口，支持大多数 root 应用
-- **模块管理**：支持 Magisk 格式的模块，通过 OverlayFS 实现系统less 修改
+- **模块管理**：支持 Magisk 格式的模块，实现系统less 修改
 
 ### KernelMask 新增功能
 
