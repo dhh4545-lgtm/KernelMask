@@ -509,6 +509,12 @@ enum PathHideCmd {
     /// Reload pathhide module (apply config changes)
     Reload,
 
+    /// Disable pathhide (creates marker file, unloads module)
+    Disable,
+
+    /// Enable pathhide (removes marker file)
+    Enable,
+
     /// Show pathhide status and hidden paths
     Status,
 
@@ -841,6 +847,8 @@ pub fn run() -> Result<()> {
             PathHideCmd::Load => crate::pathhide::load(),
             PathHideCmd::Unload => crate::pathhide::unload(),
             PathHideCmd::Reload => crate::pathhide::reload(),
+            PathHideCmd::Disable => crate::pathhide::disable(),
+            PathHideCmd::Enable => crate::pathhide::enable(),
             PathHideCmd::Status => {
                 crate::pathhide::status();
                 Ok(())

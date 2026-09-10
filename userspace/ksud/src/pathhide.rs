@@ -1,6 +1,6 @@
 use anyhow::{Context, Result};
 use const_format::concatcp;
-use log::info;
+use log::{info, warn};
 use rustix::cstr;
 use std::fs;
 use std::path::Path;
@@ -12,9 +12,51 @@ use crate::defs::{WORKING_DIR};
 const KERNEL_LIB_DIR: &str = concatcp!(WORKING_DIR, "kernel/lib/");
 const PATHHIDE_KO: &str = concatcp!(KERNEL_LIB_DIR, "KernelMask.ko");
 const PATHHIDE_CONFIG: &str = concatcp!(WORKING_DIR, "pathhide.txt");
+const PATHHIDE_DISABLE: &str = concatcp!(WORKING_DIR, "pathhide.disable");
 
 fn ensure_dirs() -> Result<()> {
     fs::create_dir_all(KERNEL_LIB_DIR).context("create kernel/lib dir")?;
+    Ok(())
+}
+
+/// Check if pathhide is disabled.
+/// Disabled when:
+/// 1. Device is in safe mode (rescue mode)
+/// 2. Disable marker file exists at /data/adb/ksu/pathhide.disable
+pub fn is_disabled() -> bool {
+    // Safe mode always disables pathhide (rescue protection)
+    if crate::utils::is_safe_mode() {
+        warn!("pathhide: disabled due to safe mode");
+        return true;
+    }
+    // Manual disable marker
+    if Path::new(PATHHIDE_DISABLE).exists() {
+        warn!("pathhide: disabled by marker file {PATHHIDE_DISABLE}");
+        return true;
+    }
+    false
+}
+
+/// Permanently disable pathhide by creating the marker file.
+pub fn disable() -> Result<()> {
+    ensure_dirs()?;
+    fs::write(PATHHIDE_DISABLE, "# pathhide disabled\n")?;
+    info!("pathhide: disabled (marker created at {PATHHIDE_DISABLE})");
+    // Unload if currently loaded
+    if is_loaded() {
+        let _ = unload();
+    }
+    Ok(())
+}
+
+/// Re-enable pathhide by removing the marker file.
+pub fn enable() -> Result<()> {
+    if Path::new(PATHHIDE_DISABLE).exists() {
+        fs::remove_file(PATHHIDE_DISABLE)?;
+        info!("pathhide: enabled (marker removed)");
+    } else {
+        info!("pathhide: already enabled (no marker file)");
+    }
     Ok(())
 }
 
@@ -64,6 +106,15 @@ pub fn set_config(content: &str) -> Result<()> {
 }
 
 pub fn load() -> Result<()> {
+    // Check if disabled (safe mode or marker file)
+    if is_disabled() {
+        warn!("pathhide: skip loading because it is disabled");
+        // If somehow loaded, unload it
+        if is_loaded() {
+            let _ = unload();
+        }
+        return Ok(());
+    }
     if is_loaded() {
         info!("pathhide already loaded");
         return Ok(());
@@ -119,8 +170,13 @@ pub fn reload() -> Result<()> {
 }
 
 pub fn status() {
+    let disabled = is_disabled();
     let loaded = is_loaded();
+    println!("disabled: {disabled}");
     println!("loaded: {loaded}");
+    if disabled {
+        println!("reason: {}", if crate::utils::is_safe_mode() { "safe mode" } else { "marker file" });
+    }
     if loaded {
         if let Ok(content) = get_config() {
             let paths: Vec<&str> = content
