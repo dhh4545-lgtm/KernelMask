@@ -45,6 +45,8 @@ mod resetprop;
 #[cfg(target_os = "android")]
 mod restorecon;
 #[cfg(target_os = "android")]
+mod pathhide;
+#[cfg(target_os = "android")]
 mod sepolicy;
 #[cfg(target_os = "android")]
 mod su;

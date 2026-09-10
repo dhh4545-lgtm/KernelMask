@@ -9,3 +9,30 @@ __pycache__
 /dist
 /repack-config.json
 /userspace/ksud/.lkm_image_bootstrap.o
+
+# Build outputs
+/build
+**/build/
+**/.cxx/
+*.o
+*.ko
+
+# Local config
+local.properties
+*.local
+
+# Signing keys
+*.jks
+*.keystore
+*.p12
+*.pem
+*.key
+
+# IDE
+.idea/
+.vscode/
+*.iml
+
+# OS
+.DS_Store
+Thumbs.db

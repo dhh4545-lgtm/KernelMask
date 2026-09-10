@@ -153,6 +153,12 @@ enum Commands {
         #[command(subcommand)]
         command: Initrc,
     },
+
+    /// PathHide - kernel-level path hiding
+    PathHide {
+        #[command(subcommand)]
+        command: PathHideCmd,
+    },
 }
 
 #[derive(clap::Subcommand, Debug)]
@@ -489,6 +495,30 @@ enum Initrc {
     Refresh,
 }
 
+#[derive(clap::Subcommand, Debug)]
+enum PathHideCmd {
+    /// Deploy KernelMask.ko to /data/adb/ksu/kernel/lib/
+    Deploy,
+
+    /// Load pathhide module
+    Load,
+
+    /// Unload pathhide module
+    Unload,
+
+    /// Reload pathhide module (apply config changes)
+    Reload,
+
+    /// Show pathhide status and hidden paths
+    Status,
+
+    /// Get current config content
+    GetConfig,
+
+    /// Set config content (read from stdin)
+    SetConfig,
+}
+
 pub fn run() -> Result<()> {
     android_logger::init_once(
         Config::default()
@@ -804,6 +834,28 @@ pub fn run() -> Result<()> {
         },
         Commands::Initrc { command } => match command {
             Initrc::Refresh => regenerate_preinit_rc(),
+        },
+
+        Commands::PathHide { command } => match command {
+            PathHideCmd::Deploy => crate::pathhide::deploy_ko(),
+            PathHideCmd::Load => crate::pathhide::load(),
+            PathHideCmd::Unload => crate::pathhide::unload(),
+            PathHideCmd::Reload => crate::pathhide::reload(),
+            PathHideCmd::Status => {
+                crate::pathhide::status();
+                Ok(())
+            }
+            PathHideCmd::GetConfig => {
+                let content = crate::pathhide::get_config()?;
+                print!("{content}");
+                Ok(())
+            }
+            PathHideCmd::SetConfig => {
+                use std::io::Read;
+                let mut buffer = String::new();
+                std::io::stdin().read_to_string(&mut buffer)?;
+                crate::pathhide::set_config(&buffer)
+            }
         },
     };
 

@@ -163,6 +163,11 @@ pub fn on_services() {
 
     info!("on_services triggered!");
     run_stage("service", false);
+
+    // Auto-load pathhide kernel module
+    if let Err(e) = crate::pathhide::load() {
+        warn!("pathhide auto-load failed: {e:#}");
+    }
 }
 
 pub fn on_boot_completed() {

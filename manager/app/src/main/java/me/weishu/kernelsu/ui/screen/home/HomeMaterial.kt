@@ -135,8 +135,7 @@ fun HomePagerMaterial(
                 actions = actions,
             )
             InfoCard(systemInfo = state.systemInfo)
-            DonateCard(onOpenUrl = actions.onOpenUrl)
-            LearnMoreCard(onOpenUrl = actions.onOpenUrl)
+            // DonateCard and LearnMoreCard removed for KernelMask
             Spacer(Modifier.height(bottomInnerPadding))
         }
     }

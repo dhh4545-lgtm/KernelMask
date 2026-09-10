@@ -1,0 +1,5 @@
+# Signing configuration (copy to gradle.properties and fill in your own values)
+KEYSTORE_FILE=your-key.jks
+KEYSTORE_PASSWORD=your-password
+KEY_ALIAS=your-alias
+KEY_PASSWORD=your-password

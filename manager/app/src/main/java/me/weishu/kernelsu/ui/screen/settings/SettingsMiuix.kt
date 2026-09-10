@@ -149,21 +149,6 @@ fun SettingPagerMiuix(
                             .padding(top = 12.dp)
                             .fillMaxWidth(),
                     ) {
-                        OverlayDropdownPreference(
-                            title = stringResource(id = R.string.settings_ui_mode),
-                            summary = stringResource(id = R.string.settings_ui_mode_summary),
-                            items = UiMode.entries.map { it.name },
-                            startAction = {
-                                Icon(
-                                    Icons.Rounded.Dashboard,
-                                    modifier = Modifier.padding(end = 6.dp),
-                                    contentDescription = stringResource(id = R.string.settings_ui_mode),
-                                    tint = colorScheme.onBackground
-                                )
-                            },
-                            selectedIndex = if (uiState.uiMode == UiMode.Material.value) 1 else 0,
-                            onSelectedIndexChange = actions.onSetUiModeIndex
-                        )
                         ArrowPreference(
                             title = stringResource(id = R.string.settings_theme),
                             summary = stringResource(id = R.string.settings_theme_summary),
@@ -198,6 +183,26 @@ fun SettingPagerMiuix(
                                     )
                                 },
                                 onClick = actions.onOpenProfileTemplate
+                            )
+                        }
+
+                        Card(
+                            modifier = Modifier
+                                .padding(top = 12.dp)
+                                .fillMaxWidth(),
+                        ) {
+                            ArrowPreference(
+                                title = "路径隐藏",
+                                summary = "内核级隐藏指定路径",
+                                startAction = {
+                                    Icon(
+                                        Icons.Rounded.FolderDelete,
+                                        modifier = Modifier.padding(end = 6.dp),
+                                        contentDescription = "路径隐藏",
+                                        tint = colorScheme.onBackground
+                                    )
+                                },
+                                onClick = actions.onOpenPathHide
                             )
                         }
                     }

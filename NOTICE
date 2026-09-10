@@ -1,0 +1,65 @@
+KernelMask
+Copyright (C) 2026 KernelMask Contributors
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+---
+
+Dual License Notice:
+
+This project contains code under two different licenses:
+
+1. Kernel space code (kernel/ directory):
+   - Licensed under GNU General Public License v2.0 only (GPL-2.0-only)
+   - This is required for compatibility with the Linux kernel, which is licensed under GPL-2.0-only
+   - Kernel modules must declare MODULE_LICENSE("GPL") to be compatible with the kernel
+   - Files in this directory contain SPDX-License-Identifier: GPL-2.0-only or GPL-2.0
+
+2. User space code (all other directories, including userspace/, manager/, scripts/, etc.):
+   - Licensed under GNU General Public License v3.0 only (GPL-3.0-only)
+   - Files in these directories contain SPDX-License-Identifier: GPL-3.0-only where applicable
+
+The project-level LICENSE file contains the full text of GNU General Public License v3.0.
+For the kernel space code, the GPL-2.0 license terms apply.
+
+---
+
+This project is a derivative work of KernelSU.
+
+Original Project: KernelSU
+Original URL: https://github.com/tiann/KernelSU
+Original License: GNU General Public License v3.0 (user space) / GPL-2.0 (kernel space)
+Original Copyright: Copyright (C) 2022 weishu <https://github.com/tiann>
+
+KernelSU is licensed under the GNU General Public License.
+A copy of the GPL-3.0 license is included in the LICENSE file.
+
+Modifications from the original project:
+- Added LKM multi-version precompiled support (android14-6.1, android15-6.6, android16-6.12) with runtime KMI auto-detection
+- Added PathHide kernel module for kernel-level path hiding
+- Changed package name to com.kernelmask and app name to KernelMask
+- Removed "Support Development" and "Learn KernelSU" cards from home screen
+- Modified pathhide deployment path to /data/adb/ksu/kernel/lib/KernelMask.ko
+
+All modifications are licensed under the same licenses as the original code (GPL-2.0 for kernel space, GPL-3.0 for user space).
+
+---
+
+This product includes software developed by other open source projects:
+
+- ylarod/ddk (https://github.com/ylarod/ddk) - Android Kernel Driver Development Kit
+- Rust (https://www.rust-lang.org/) - Rust programming language and standard library
+- Android Open Source Project (https://source.android.com/) - Android NDK and related tools
+
+Please refer to the respective project repositories for their license terms.
