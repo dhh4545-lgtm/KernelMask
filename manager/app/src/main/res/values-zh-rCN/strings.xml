@@ -64,8 +64,8 @@
     <string name="safe_mode_module_disabled">处于安全模式下，禁止安装模块</string>
     <string name="reboot_to_apply">重启生效</string>
     <string name="module_magisk_conflict">因与 Magisk 有冲突，所有模块不可用！</string>
-    <string name="home_learn_kernelsu">了解 KernelSU</string>
-    <string name="home_learn_kernelsu_url">https://kernelsu.org/zh_CN/guide/what-is-kernelsu.html</string>
+    <string name="home_learn_kernelsu">了解 KernelMask</string>
+    <string name="home_learn_kernelsu_url">https://github.com/dhh4545-lgtm/KernelMask</string>
     <string name="home_click_to_learn_kernelsu">了解如何安装 KernelSU 以及如何开发模块</string>
     <string name="home_support_title">支持开发</string>
     <string name="home_support_content">KernelSU 将保持免费开源，向开发者捐赠以表示支持</string>
@@ -132,6 +132,8 @@
     <string name="grant_root_failed">获取 Root 失败！</string>
     <string name="home_pr_build_warning">当前为 PR 调试构建，请勿在生产环境中使用！</string>
     <string name="home_pr_kernel_warning">当前内核包含 PR 签名支持，这不是一个生产内核！</string>
+    <string name="home_beta_label">测试版</string>
+    <string name="home_beta_description">本项目为测试版本，仅供学习研究使用</string>
     <string name="action">执行</string>
     <string name="open">打开</string>
     <string name="close">关闭</string>

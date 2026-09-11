@@ -10,7 +10,7 @@ const BOOTSTRAP_OBJECT: &str = "lkm_image_bootstrap.o";
 const PREPARED_BOOTSTRAP_OBJECT: &str = ".lkm_image_bootstrap.o";
 
 fn get_git_version() -> Result<(u32, String), std::io::Error> {
-    Ok((10001, "v1.0.1".to_string()))
+    Ok((10011, "v1.0.1".to_string()))
 }
 
 fn configure_bindgen() {

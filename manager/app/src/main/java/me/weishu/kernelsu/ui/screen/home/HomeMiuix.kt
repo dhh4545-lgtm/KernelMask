@@ -119,10 +119,13 @@ fun HomePagerMiuix(
                         if (state.checkUpdateEnabled) {
                             UpdateCard(state = state, actions = actions)
                         }
-                        if (state.showManagerPrBuildWarning) {
-                            WarningCard(stringResource(id = R.string.home_pr_build_warning), level = WarningLevel.Notice)
-                        } else if (state.showKernelPrBuildWarning) {
-                            WarningCard(stringResource(id = R.string.home_pr_kernel_warning), level = WarningLevel.Notice)
+                        Card(modifier = Modifier.fillMaxWidth()) {
+                            Text(
+                                text = stringResource(id = R.string.home_beta_label),
+                                modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp),
+                                style = MiuixTheme.textStyles.headline2,
+                                color = colorScheme.primary
+                            )
                         }
                         if (state.showVersionMismatchWarning) {
                             WarningCard(
@@ -172,7 +175,6 @@ fun HomePagerMiuix(
                             actions = actions,
                         )
                         InfoCard(systemInfo = state.systemInfo)
-                        DonateCard(onOpenUrl = actions.onOpenUrl)
                         LearnMoreCard(onOpenUrl = actions.onOpenUrl)
                         Spacer(Modifier.height(bottomInnerPadding))
                     }
@@ -328,7 +330,7 @@ private fun StatusCard(
                                     Text(
                                         text = stringResource(
                                             R.string.home_working_version,
-                                            "${state.ksuVersion}-${state.kernelUAPIVersion}"
+                                            "${state.ksuVersion}"
                                         ),
                                         fontSize = 15.sp,
                                         fontWeight = FontWeight.Medium,

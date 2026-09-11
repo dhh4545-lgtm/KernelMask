@@ -83,8 +83,8 @@
     <string name="safe_mode_module_disabled">Module installation is disabled in safe mode</string>
     <string name="reboot_to_apply">Reboot to take effect</string>
     <string name="module_magisk_conflict">Modules are unavailable due to a conflict with Magisk!</string>
-    <string name="home_learn_kernelsu">Learn KernelSU</string>
-    <string name="home_learn_kernelsu_url">https://kernelsu.org/guide/what-is-kernelsu.html</string>
+    <string name="home_learn_kernelsu">Learn KernelMask</string>
+    <string name="home_learn_kernelsu_url">https://github.com/dhh4545-lgtm/KernelMask</string>
     <string name="home_click_to_learn_kernelsu">Learn how to install KernelSU and use modules.</string>
     <string name="home_support_title">Support Us</string>
     <string name="home_support_content">KernelSU is, and always will be, free, and open source. However, you can show us that you care by making a donation.</string>
@@ -153,6 +153,8 @@
     <string name="grant_root_failed">Failed to grant Root!</string>
     <string name="home_pr_build_warning">This is a PR debug build. Do NOT use it in production!</string>
     <string name="home_pr_kernel_warning">The kernel was built with PR signature support. This is not a production kernel!</string>
+    <string name="home_beta_label">Beta</string>
+    <string name="home_beta_description">This is a beta version for testing and educational purposes only</string>
     <string name="action">Action</string>
     <string name="open">Open</string>
     <string name="close">Close</string>

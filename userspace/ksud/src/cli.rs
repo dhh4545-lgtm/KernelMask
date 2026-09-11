@@ -517,6 +517,12 @@ enum PathHideCmd {
 
     /// Set config content (read from stdin)
     SetConfig,
+
+    /// Disable pathhide module (safe mode or manual)
+    Disable,
+
+    /// Enable pathhide module
+    Enable,
 }
 
 pub fn run() -> Result<()> {
@@ -856,6 +862,8 @@ pub fn run() -> Result<()> {
                 std::io::stdin().read_to_string(&mut buffer)?;
                 crate::pathhide::set_config(&buffer)
             }
+            PathHideCmd::Disable => crate::pathhide::disable(),
+            PathHideCmd::Enable => crate::pathhide::enable(),
         },
     };
 

@@ -82,10 +82,19 @@ fun HomePagerMaterial(
             if (state.checkUpdateEnabled) {
                 UpdateCard(state = state, actions = actions)
             }
-            if (state.showManagerPrBuildWarning) {
-                WarningCard(stringResource(id = R.string.home_pr_build_warning), level = WarningLevel.Notice)
-            } else if (state.showKernelPrBuildWarning) {
-                WarningCard(stringResource(id = R.string.home_pr_kernel_warning), level = WarningLevel.Notice)
+            TonalCard {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 12.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.home_beta_label),
+                        style = MaterialTheme.typography.titleSmall,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                }
             }
             if (state.showVersionMismatchWarning) {
                 WarningCard(
@@ -135,7 +144,6 @@ fun HomePagerMaterial(
                 actions = actions,
             )
             InfoCard(systemInfo = state.systemInfo)
-            DonateCard(onOpenUrl = actions.onOpenUrl)
             LearnMoreCard(onOpenUrl = actions.onOpenUrl)
             Spacer(Modifier.height(bottomInnerPadding))
         }
@@ -215,7 +223,7 @@ private fun StatusCard(
             else -> stringResource(R.string.home_unsupported)
         }
         val statusSummary = when {
-            ksuActive -> stringResource(R.string.home_working_version, "${state.ksuVersion}-${state.kernelUAPIVersion}")
+            ksuActive -> stringResource(R.string.home_working_version, "${state.ksuVersion}")
             notInstalled -> stringResource(R.string.home_click_to_install)
             else -> stringResource(R.string.home_unsupported_reason)
         }

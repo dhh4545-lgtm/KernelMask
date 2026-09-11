@@ -73,7 +73,7 @@ class HomeViewModel(
             currentManagerVersionCode = managerVersion.versionCode,
             systemInfo = SystemInfo(
                 kernelVersion = Os.uname().release,
-                managerVersion = "${managerVersion.versionName} (${managerVersion.versionCode}-${managerUAPIVersion})",
+                managerVersion = "${managerVersion.versionName} (${managerVersion.versionCode})",
                 deviceModel = resolveDeviceName(),
                 fingerprint = Build.FINGERPRINT,
                 selinuxStatus = getSELinuxStatusRaw(),

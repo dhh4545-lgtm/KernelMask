@@ -1,28 +1,72 @@
 use anyhow::{Context, Result};
 use const_format::concatcp;
-use log::info;
+use log::{info, warn};
 use rustix::cstr;
 use std::fs;
 use std::path::Path;
 
 use crate::assets;
 use crate::defs::{WORKING_DIR};
+use crate::utils::is_safe_mode;
 
 const KERNEL_LIB_DIR: &str = concatcp!(WORKING_DIR, "kernel/lib/");
-const PATHHIDE_KO: &str = concatcp!(KERNEL_LIB_DIR, "ksu.ko");
+const PATHHIDE_KO: &str = concatcp!(KERNEL_LIB_DIR, "KernelMask.ko");
 const PATHHIDE_CONFIG: &str = concatcp!(WORKING_DIR, "pathhide.txt");
+const PATHHIDE_DISABLE: &str = concatcp!(WORKING_DIR, "pathhide.disable");
 
 fn ensure_dirs() -> Result<()> {
     fs::create_dir_all(KERNEL_LIB_DIR).context("create kernel/lib dir")?;
     Ok(())
 }
 
+pub fn is_disabled() -> bool {
+    if is_safe_mode() {
+        info!("pathhide: safe mode detected, module disabled");
+        return true;
+    }
+    if Path::new(PATHHIDE_DISABLE).exists() {
+        info!("pathhide: disable flag exists, module disabled");
+        return true;
+    }
+    false
+}
+
+pub fn disable() -> Result<()> {
+    ensure_dirs()?;
+    fs::write(PATHHIDE_DISABLE, "")?;
+    info!("pathhide disabled (flag file created)");
+    if is_loaded() {
+        if let Err(e) = unload() {
+            warn!("pathhide unload after disable failed: {e:#}");
+        }
+    }
+    Ok(())
+}
+
+pub fn enable() -> Result<()> {
+    if Path::new(PATHHIDE_DISABLE).exists() {
+        fs::remove_file(PATHHIDE_DISABLE)?;
+        info!("pathhide enabled (flag file removed)");
+    }
+    if !is_loaded() && !is_safe_mode() {
+        if let Err(e) = load() {
+            warn!("pathhide load after enable failed: {e:#}");
+        }
+    }
+    Ok(())
+}
+
 pub fn deploy_ko() -> Result<()> {
     ensure_dirs()?;
-    let data = assets::get_asset_data("ksu.ko")?;
-    fs::write(PATHHIDE_KO, &data).context("write ksu.ko")?;
+    let kmi = crate::boot_patch::get_current_kmi()
+        .context("failed to detect current KMI for pathhide")?;
+    let asset_name = format!("pathhide_{kmi}.ko");
+    info!("deploying pathhide ko for KMI: {kmi} (asset: {asset_name})");
+    let data = assets::get_asset_data(&asset_name)
+        .with_context(|| format!("no embedded pathhide module for KMI {kmi}: {asset_name}"))?;
+    fs::write(PATHHIDE_KO, &data).context("write KernelMask.ko")?;
     fs::set_permissions(PATHHIDE_KO, std::os::unix::fs::PermissionsExt::from_mode(0o644))?;
-    info!("ksu.ko deployed to {PATHHIDE_KO}");
+    info!("KernelMask.ko deployed to {PATHHIDE_KO}");
     Ok(())
 }
 
@@ -53,11 +97,20 @@ pub fn load() -> Result<()> {
         info!("pathhide already loaded");
         return Ok(());
     }
+    if is_disabled() {
+        info!("pathhide is disabled, skip loading");
+        return Ok(());
+    }
     ensure_dirs()?;
 
     // Ensure config file exists
     if !Path::new(PATHHIDE_CONFIG).exists() {
         fs::write(PATHHIDE_CONFIG, "# One absolute path per line\n")?;
+    }
+
+    // Always deploy ko first, even if config is empty
+    if !Path::new(PATHHIDE_KO).exists() {
+        deploy_ko()?;
     }
 
     // Check if config has any valid (non-comment, non-empty) lines
@@ -72,11 +125,7 @@ pub fn load() -> Result<()> {
         return Ok(());
     }
 
-    if !Path::new(PATHHIDE_KO).exists() {
-        deploy_ko()?;
-    }
-
-    let ko_data = fs::read(PATHHIDE_KO).context("read ksu.ko")?;
+    let ko_data = fs::read(PATHHIDE_KO).context("read KernelMask.ko")?;
     let params = format!("config_path={PATHHIDE_CONFIG}");
     let cparams = std::ffi::CString::new(params)?;
 
